@@ -121,26 +121,5 @@
       "nonModels": {}
     }
   },
-  "storage": {
-    "aws_region": "us-east-1",
-    "bucket_name": "amplify-amplifydemo-conno-amplifydemostoragebucket-me0cviqx5kon",
-    "buckets": [
-      {
-        "name": "amplifyDemoStorage",
-        "bucket_name": "amplify-amplifydemo-conno-amplifydemostoragebucket-me0cviqx5kon",
-        "aws_region": "us-east-1",
-        "paths": {
-          "media/${cognito-identity.amazonaws.com:sub}/*": {
-            "entityidentity": [
-              "get",
-              "list",
-              "write",
-              "delete"
-            ]
-          }
-        }
-      }
-    ]
-  },
   "version": "1.3"
 }

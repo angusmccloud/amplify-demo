@@ -10,13 +10,31 @@ import {
   Divider,
 } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import { fetchPeople, createPerson, deletePerson } from "./services";
+import { createPerson, deletePerson } from "./services";
+import { generateClient } from "aws-amplify/data";
+
+// Used for Subscription
+const client = generateClient();
 
 export default function HomePage ({user, signOut}) {
   const [people, setPeople] = useState([]);
 
+  // If you were doing one-time fetch
+  // useEffect(() => {
+  //   fetchPeople(setPeople);
+  // }, []);
+
+  // Sample for doing a data-subscription, then no need to do refreshes on changes (remote or local)
   useEffect(() => {
-    fetchPeople(setPeople);
+    const sub = client.models.Person.observeQuery().subscribe({
+      next: ({ items }) => {
+        setPeople([...items]);
+      },
+    });
+    return () => {
+      // If you have multiple data models, make sure you ubsub from all of them
+      sub.unsubscribe();
+    };
   }, []);
 
   return (
@@ -29,7 +47,7 @@ export default function HomePage ({user, signOut}) {
       margin="0 auto"
     >
       <Heading level={1}>My People App</Heading>
-      <View as="form" margin="3rem 0" onSubmit={(event) => createPerson(event, setPeople)}>
+      <View as="form" margin="3rem 0" onSubmit={(event) => createPerson(event)}>
         <Flex
           direction="column"
           justifyContent="center"
@@ -84,7 +102,7 @@ export default function HomePage ({user, signOut}) {
             <Text fontStyle="italic">{person.company}</Text>
             <Button
               variation="destructive"
-              onClick={() => deletePerson(person.id, setPeople)}
+              onClick={() => deletePerson(person.id)}
             >
               Delete Person
             </Button>

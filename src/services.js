@@ -1,7 +1,8 @@
 import { generateClient } from "aws-amplify/data";
+const client = generateClient();
 
+// Sample with One-Time Fetch
 export const fetchPeople = async (setPeople) => {
-  const client = generateClient();
   const { errors, data } = await client.models.Person.list({
     authMode: 'userPool',
   });
@@ -15,8 +16,7 @@ export const fetchPeople = async (setPeople) => {
   setPeople(data);
 }
 
-export const createPerson = async (event, setPeople) => {
-  const client = generateClient();
+export const createPerson = async (event) => {
   event.preventDefault();
   const form = new FormData(event.target);
   // console.log(form.get("image").name);
@@ -38,12 +38,10 @@ export const createPerson = async (event, setPeople) => {
   }
 
   console.log('-- New Person --', data);
-  fetchPeople(setPeople);
   event.target.reset();
 }
 
-export const deletePerson = async (id, setPeople) => {
-  const client = generateClient();
+export const deletePerson = async (id) => {
   const toBeDeletedPerson = {
     id: id,
   };
@@ -57,5 +55,4 @@ export const deletePerson = async (id, setPeople) => {
   }
 
   console.log('-- Deleted Person --', data);
-  fetchPeople(setPeople);
 }
